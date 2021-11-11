@@ -10,12 +10,6 @@ class GameTest {
 	Game game = new Game();
 
 	@Test
-	void testNextPlayer() {
-		assertTrue(game.isCurrentPlayer());
-		game.nextPlayer();
-		assertFalse(game.isCurrentPlayer());
-	}
-	@Test
 	void testInitialBoard() {
 		Disk[] disks = game.getDisks();
 		assertEquals(Disk.DARK, disks[27]);
@@ -26,9 +20,10 @@ class GameTest {
 	
 	@Test 
 	void testPlaceDisk() {
-		Disk[] disks = game.getDisks();
-		disks.placeDisk(43);
-		assertEquals(Disk.DARK, disks[43]);
+		assertEquals(Disk.DARK, game.getCurrentPlayer());
+		game.placeDisk(43);
+		Disk[] board = game.getDisks();
+		assertEquals(Disk.DARK, board[43]);
 	}
 	@Test
 	void testValidMove() {
