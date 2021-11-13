@@ -1,6 +1,7 @@
 package edu.metrostate.ics425.reversi.team_smsl.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * @author skylar
@@ -80,10 +81,10 @@ public class Game implements Serializable {
 		disks = new Disk[NUM_DISKS];
 		currentPlayer = Disk.DARK;
 		// set initial pieces
-		disks[27] = Disk.DARK;
-		disks[36] = Disk.DARK;
-		disks[28] = Disk.LIGHT;
-		disks[35] = Disk.LIGHT;
+		disks[27] = Disk.LIGHT;
+		disks[36] = Disk.LIGHT;
+		disks[28] = Disk.DARK;
+		disks[35] = Disk.DARK;
 	}
 	
 	/**
@@ -93,14 +94,75 @@ public class Game implements Serializable {
 	 * @param loc location of the disk
 	 */
 	public void placeDisk(int loc) {
-		if (disks[loc] == null && isValidMove(loc)) {
+		if (isEmpty(loc) && isValidMove(loc)) {
+			// TODO set disks in row to current player
 			disks[loc] = currentPlayer;
 			if (!isOver()) {
 				nextPlayer();				
 			}
 		}
 	}
-	// findValidMoves()
+
+	// TODO test findMoves method
+	private int[] findMoves() {
+		boolean rowStarted = false;
+		ArrayList<Integer> activeRow = new ArrayList<Integer>();
+		ArrayList<Integer> moves = new ArrayList<Integer>();
+		// directions enum
+		for (Rows direction : Rows.values()) {
+			// rows in the direction
+			for (var row : direction.rows) {
+				// locations in the row
+				for (var space : row) {
+					
+					// evaluate location value
+					switch(disks[space]) {
+					case DARK:
+						if (currentPlayer == disks[space]) {
+							// matching disk
+							if (activeRow.isEmpty()) {
+								// new row
+								rowStarted = true;
+								activeRow.add(space);
+							} else {
+								activeRow.add(space);
+							}
+						} else {	
+							// other player's disk
+							if (rowStarted) {
+								activeRow.add(space);
+							}
+						}
+						break;
+					case LIGHT:
+						if (currentPlayer == disks[space]) {
+							// matching disk
+							if (activeRow.isEmpty()) {
+								// new row
+								rowStarted = true;
+								activeRow.add(space);
+							} else {
+								activeRow.add(space);
+							}
+						} else {	
+							// other player's disk
+							if (rowStarted) {
+								activeRow.add(space);
+							}
+						}
+						break;
+					default:
+						if (rowStarted) {
+							// end of row
+							moves.add(space);
+						} 
+						break;
+					}
+				}
+			}
+		}
+		return new int[10];
+	}
 	// getWinner()
 	
 	private boolean isOver() {
@@ -108,9 +170,14 @@ public class Game implements Serializable {
 		return false;
 	}
 
+	// TODO test validate move
 	private boolean isValidMove(int loc) {
-		// TODO validate move
-		return isEmpty(loc);
+		for (int space : findMoves()) {
+			if (space == loc) {
+				return true;
+			}
+		}
+		return false;
 	}
 	private boolean isEmpty(int loc) {
 		return disks[loc] == null;

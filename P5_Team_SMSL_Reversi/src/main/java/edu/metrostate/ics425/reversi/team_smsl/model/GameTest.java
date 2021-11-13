@@ -12,10 +12,10 @@ class GameTest {
 	@Test
 	void testInitialBoard() {
 		Disk[] disks = game.getDisks();
-		assertEquals(Disk.DARK, disks[27]);
-		assertEquals(Disk.DARK, disks[36]);
-		assertEquals(Disk.LIGHT, disks[28]);
-		assertEquals(Disk.LIGHT, disks[35]);
+		assertEquals(Disk.LIGHT, disks[27]);
+		assertEquals(Disk.LIGHT, disks[36]);
+		assertEquals(Disk.DARK, disks[28]);
+		assertEquals(Disk.DARK, disks[35]);
 	}
 	
 	@Test 
@@ -25,6 +25,12 @@ class GameTest {
 		Disk[] board = game.getDisks();
 		assertEquals(Disk.DARK, board[43]);
 	}
+	
+	@Test
+	void testFindMoves() {
+		
+	}
+	
 	@Test
 	void testValidMove() {
 		// valid move is valid
