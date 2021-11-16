@@ -10,7 +10,11 @@ import java.util.ArrayList;
 public class Game implements Serializable {
 	
 	enum Disk {
-		LIGHT, DARK;
+		LIGHT, DARK, EMPTY;
+
+		boolean isEmpty() {
+			return this == null;
+		}
 	}
 	enum Rows {
 		HORIZONTAL(new int[][] { 
@@ -80,11 +84,48 @@ public class Game implements Serializable {
 	public Game() {
 		disks = new Disk[NUM_DISKS];
 		currentPlayer = Disk.DARK;
+		
 		// set initial pieces
 		disks[27] = Disk.LIGHT;
 		disks[36] = Disk.LIGHT;
 		disks[28] = Disk.DARK;
 		disks[35] = Disk.DARK;
+		for (Disk disk : disks) {
+			if (disk == null) {
+				disk = Disk.EMPTY;
+			}
+		}
+	}
+	
+	/**
+	 * Returns the disks on the board
+	 * 
+	 * @return the disks
+	 */
+	public Disk[] getDisks() {
+		return disks.clone();
+	}
+	
+	/**
+	 * Returns the score of the game in an array
+	 * with the scores of [Disk.DARK, Disk.LIGHT]
+	 * 
+	 * @return score of the game
+	 */
+	public int[] getScore() {
+		int dark = 0;
+		int light = 0;
+		
+		for (Disk disk : disks) {
+			if (disk == Disk.DARK) {
+				dark++;
+			}
+			if (disk == Disk.LIGHT) {
+				light++;
+			}
+		}
+		int[] scores = {dark, light};
+		return scores;
 	}
 	
 	/**
@@ -94,100 +135,12 @@ public class Game implements Serializable {
 	 * @param loc location of the disk
 	 */
 	public void placeDisk(int loc) {
-		if (isEmpty(loc) && isValidMove(loc)) {
-			// TODO set disks in row to current player
+		if (isValidMove(loc)) {
 			disks[loc] = currentPlayer;
 			if (!isOver()) {
 				nextPlayer();				
 			}
 		}
-	}
-
-	// TODO test findMoves method
-	private int[] findMoves() {
-		boolean rowStarted = false;
-		ArrayList<Integer> activeRow = new ArrayList<Integer>();
-		ArrayList<Integer> moves = new ArrayList<Integer>();
-		// directions enum
-		for (Rows direction : Rows.values()) {
-			// rows in the direction
-			for (var row : direction.rows) {
-				// locations in the row
-				for (var space : row) {
-					
-					// evaluate location value
-					switch(disks[space]) {
-					case DARK:
-						if (currentPlayer == disks[space]) {
-							// matching disk
-							if (activeRow.isEmpty()) {
-								// new row
-								rowStarted = true;
-								activeRow.add(space);
-							} else {
-								activeRow.add(space);
-							}
-						} else {	
-							// other player's disk
-							if (rowStarted) {
-								activeRow.add(space);
-							}
-						}
-						break;
-					case LIGHT:
-						if (currentPlayer == disks[space]) {
-							// matching disk
-							if (activeRow.isEmpty()) {
-								// new row
-								rowStarted = true;
-								activeRow.add(space);
-							} else {
-								activeRow.add(space);
-							}
-						} else {	
-							// other player's disk
-							if (rowStarted) {
-								activeRow.add(space);
-							}
-						}
-						break;
-					default:
-						if (rowStarted) {
-							// end of row
-							moves.add(space);
-						} 
-						break;
-					}
-				}
-			}
-		}
-		return new int[10];
-	}
-	// getWinner()
-	
-	private boolean isOver() {
-		// TODO evaluate if game is over
-		return false;
-	}
-
-	// TODO test validate move
-	private boolean isValidMove(int loc) {
-		for (int space : findMoves()) {
-			if (space == loc) {
-				return true;
-			}
-		}
-		return false;
-	}
-	private boolean isEmpty(int loc) {
-		return disks[loc] == null;
-	}
-
-	/**
-	 * @return the disks
-	 */
-	public Disk[] getDisks() {
-		return disks.clone();
 	}
 	
 	/**
@@ -206,4 +159,54 @@ public class Game implements Serializable {
 		this.currentPlayer = (getCurrentPlayer() == Disk.DARK) ? Disk.LIGHT : Disk.DARK;
 	}
 
+// TODO test findMoves method
+	public int[] findMoves() {
+		boolean rowStarted = false;
+		ArrayList<Integer> activeRow = new ArrayList<Integer>();
+		ArrayList<Integer> moves = new ArrayList<Integer>();
+		
+		// directions enum
+		for (Rows direction : Rows.values()) {
+			// rows in the direction
+			for (var row : direction.rows) {
+				// locations in the row
+				for (var space : row) {
+					if (currentPlayer == disks[space]) {
+						while (! (disks[space] == Disk.EMPTY || (disks[space] == currentPlayer))) {
+							rowStarted = true;
+							activeRow.add(space);
+						}
+						if (rowStarted) {
+							moves.add(space);
+						}
+					}
+				}
+			}
+		}
+		int[] allMoves = new int[moves.size()];
+		for (int i=0; i<allMoves.length; i++) {
+			allMoves[i] = moves.get(i).intValue();
+		}
+		return allMoves;
+	}
+
+	
+// TODO evaluate if game is over
+	private boolean isOver() {
+		return false;
+	}
+
+// TODO test validate move
+	private boolean isValidMove(int loc) {
+		if (disks[loc].isEmpty() && !isOver()) {
+			for (int space : findMoves()) {
+				if (space == loc) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+// TODO getWinner()
 }
