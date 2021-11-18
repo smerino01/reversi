@@ -157,6 +157,10 @@ public class Game implements Serializable {
 			}
 		}
 	}
+	
+	private boolean isOnBoard(int space) {
+		return space >= 0 && space < NUM_DISKS;
+	}
 
 // TODO findMoves()
 	private int[] findMoves() {
