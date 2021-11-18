@@ -116,6 +116,7 @@ public class Game implements Serializable {
 	/**
 	 * Returns the score of the player
 	 * 
+	 * @param player
 	 * @return score of the player
 	 */
 	public int getScore(Disk player) {
