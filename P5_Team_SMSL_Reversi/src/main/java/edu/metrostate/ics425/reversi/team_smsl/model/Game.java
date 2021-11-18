@@ -2,6 +2,7 @@ package edu.metrostate.ics425.reversi.team_smsl.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * @author skylar
@@ -10,10 +11,10 @@ import java.util.ArrayList;
 public class Game implements Serializable {
 	
 	enum Disk {
-		LIGHT, DARK, EMPTY;
-
-		boolean isEmpty() {
-			return this == null;
+		LIGHT, DARK;
+		
+		public boolean isEmpty() {
+			return (this == null);
 		}
 	}
 	enum Rows {
@@ -101,11 +102,6 @@ public class Game implements Serializable {
 		disks[36] = Disk.LIGHT;
 		disks[28] = Disk.DARK;
 		disks[35] = Disk.DARK;
-		for (Disk disk : disks) {
-			if (disk == null) {
-				disk = Disk.EMPTY;
-			}
-		}
 	}
 	
 	/**
@@ -118,25 +114,16 @@ public class Game implements Serializable {
 	}
 	
 	/**
-	 * Returns the score of the game in an array
-	 * with the scores of [Disk.DARK, Disk.LIGHT]
+	 * Returns the score of the player
 	 * 
-	 * @return score of the game
+	 * @return score of the player
 	 */
-	public int[] getScore() {
-		int dark = 0;
-		int light = 0;
-		
+	public int getScore(Disk player) {
+		int score = 0;
 		for (Disk disk : disks) {
-			if (disk == Disk.DARK) {
-				dark++;
-			}
-			if (disk == Disk.LIGHT) {
-				light++;
-			}
+			if (disk == player) { score++; }
 		}
-		int[] scores = {dark, light};
-		return scores;
+		return score;
 	}
 	
 	/**
@@ -170,38 +157,12 @@ public class Game implements Serializable {
 		this.currentPlayer = (getCurrentPlayer() == Disk.DARK) ? Disk.LIGHT : Disk.DARK;
 	}
 
-// TODO test findMoves method
-	public int[] findMoves() {
-		boolean rowStarted = false;
-		ArrayList<Integer> activeRow = new ArrayList<Integer>();
-		ArrayList<Integer> moves = new ArrayList<Integer>();
-		
-		// directions enum
-		for (Rows direction : Rows.values()) {
-			// rows in the direction
-			for (var row : direction.rows) {
-				// locations in the row
-				for (var space : row) {
-					if (currentPlayer == disks[space]) {
-						while (! (disks[space] == Disk.EMPTY || (disks[space] == currentPlayer))) {
-							rowStarted = true;
-							activeRow.add(space);
-						}
-						if (rowStarted) {
-							moves.add(space);
-						}
-					}
-				}
-			}
-		}
-		int[] allMoves = new int[moves.size()];
-		for (int i=0; i<allMoves.length; i++) {
-			allMoves[i] = moves.get(i).intValue();
-		}
-		return allMoves;
+// TODO findMoves()
+	private int[] findMoves() {
+		return new int[10];
 	}
 
-	
+
 // TODO evaluate if game is over
 	private boolean isOver() {
 		return false;
