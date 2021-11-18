@@ -20,8 +20,8 @@ class GameTest {
 	
 	@Test
 	void testGetScore() {
-		assertEquals(2, game.getScore()[0]);
-		assertEquals(2, game.getScore()[1]);
+		assertEquals(2, game.getScore(Disk.DARK));
+		assertEquals(2, game.getScore(Disk.LIGHT));
 	}
 	@Test 
 	void testPlaceDisk() {

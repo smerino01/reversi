@@ -168,7 +168,7 @@ public class Game implements Serializable {
 		return false;
 	}
 
-// TODO test validate move
+// TODO validate move
 	private boolean isValidMove(int loc) {
 		if (disks[loc].isEmpty() && !isOver()) {
 			for (int space : findMoves()) {
