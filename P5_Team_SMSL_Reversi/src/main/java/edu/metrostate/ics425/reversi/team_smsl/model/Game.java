@@ -105,6 +105,15 @@ public class Game implements Serializable {
 	}
 	
 	/**
+	 * Returns Disk value of the current player
+	 * 
+	 * @return the currentPlayer
+	 */
+	public Disk getCurrentPlayer() {
+		return currentPlayer;
+	}
+	
+	/**
 	 * Returns the disks on the board
 	 * 
 	 * @return the disks
@@ -128,6 +137,13 @@ public class Game implements Serializable {
 	}
 	
 	/**
+	 * Sets current player to next player
+	 */
+	public void nextPlayer() {
+		this.currentPlayer = (getCurrentPlayer() == Disk.DARK) ? Disk.LIGHT : Disk.DARK;
+	}
+	
+	/**
 	 * Places disk on specified location
 	 * If game is not over, set to next player's turn
 	 * 
@@ -141,28 +157,11 @@ public class Game implements Serializable {
 			}
 		}
 	}
-	
-	/**
-	 * Returns Disk value of the current player
-	 * 
-	 * @return the currentPlayer
-	 */
-	public Disk getCurrentPlayer() {
-		return currentPlayer;
-	}
-	
-	/**
-	 * Sets current player to next player
-	 */
-	public void nextPlayer() {
-		this.currentPlayer = (getCurrentPlayer() == Disk.DARK) ? Disk.LIGHT : Disk.DARK;
-	}
 
 // TODO findMoves()
 	private int[] findMoves() {
 		return new int[10];
 	}
-
 
 // TODO evaluate if game is over
 	private boolean isOver() {
