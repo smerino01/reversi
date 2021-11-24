@@ -27,7 +27,7 @@ Reversi </h1>
   			<td> 
   			<c:choose>
   			<c:when test="${empty space }">
-  				<button tyoe="submit" name="loc">${stat.index }</button>
+  				<button type="submit" name="loc">${stat.index }</button>
   			</c:when>
   			</c:choose>
   			
