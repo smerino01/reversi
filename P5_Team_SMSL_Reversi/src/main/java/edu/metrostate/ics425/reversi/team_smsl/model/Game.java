@@ -201,13 +201,21 @@ public class Game implements Serializable {
 	
 	public Disk checkRows(int loc) {
 		for (Rows rows : Rows.values()) {
-			for (var row : rows.rows) {
-				for (var space : row) {
-					if (space == loc) {
-						var less = disks[space - 1];
-						var more = disks[space + 1];
-						System.out.println("less: " + less + "\nmore: " + more);
-						return more;
+			for (int i=0; i<rows.rows.length; i++) {
+				for (int j=0; j<rows.rows[i].length; j++) {
+					if (rows.rows[i][j] == loc) {
+						var left = disks[rows.rows[i][j-1]];
+						var right = disks[rows.rows[i][j+1]];
+						var up = disks[rows.rows[i-1][j]];
+						var down = disks[rows.rows[i+1][j]];
+						var upLeft = disks[rows.rows[i-1][j-1]];
+						var upRight = disks[rows.rows[i-1][j+1]];
+						var downLeft = disks[rows.rows[i+1][j-1]];
+						var downRight = disks[rows.rows[i+1][j+1]];
+						System.out.println("left: " + left + "\nright: " + right + "\nup: " + up + "\ndown: " + down);
+						System.out.println("up left: " + upLeft + "\nup right: " + upRight + "\ndown left: " + downLeft + "\ndown right: " + downRight);
+						System.out.println();
+						return right;						
 					}
 				}
 			}
