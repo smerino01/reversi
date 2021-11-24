@@ -40,6 +40,11 @@ class GameTest {
 	}
 	
 	@Test
+	void testCheckRow() {
+		assertEquals(Disk.DARK, game.checkRows(27));
+		assertEquals(Disk.LIGHT, game.checkRows(35));
+	}
+	@Test
 	void testValidMove() {
 		// valid move is valid
 		// invalid move is invalid

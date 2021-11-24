@@ -1,8 +1,6 @@
 package edu.metrostate.ics425.reversi.team_smsl.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * @author skylar
@@ -163,26 +161,57 @@ public class Game implements Serializable {
 	}
 
 // TODO findMoves()
-	private int[] findMoves() {
+	public int[] findMoves() {
+		// search horizontal rows
+		for (var row : Rows.HORIZONTAL.rows) {
+			for (var space : row) {
+				if (disks[space] == currentPlayer) {
+					
+				}
+			}
+		}
 		return new int[10];
 	}
+	
+	public void checkSpace(int loc) {
+		for (var row : Rows.HORIZONTAL.rows) {
+			for (var space : row) {
+				if (space == loc) {
+					searchRow(row);
+				}
+			}
+		}
+	}
 
-// TODO evaluate if game is over
+	private void searchRow(int[] row) {
+		// TODO Auto-generated method stub
+	}
+
+	// TODO evaluate if game is over
 	private boolean isOver() {
 		return false;
 	}
 
 // TODO validate move
 	private boolean isValidMove(int loc) {
-		if (disks[loc].isEmpty() && !isOver()) {
-			for (int space : findMoves()) {
-				if (space == loc) {
-					return true;
-				}
-			}
-		}
-		return false;
+		return !isOver() && isOnBoard(loc) && disks[loc].isEmpty();
 	}
 
 // TODO getWinner()
+	
+	public Disk checkRows(int loc) {
+		for (Rows rows : Rows.values()) {
+			for (var row : rows.rows) {
+				for (var space : row) {
+					if (space == loc) {
+						var less = disks[space - 1];
+						var more = disks[space + 1];
+						System.out.println("less: " + less + "\nmore: " + more);
+						return more;
+					}
+				}
+			}
+		}
+		return null;
+	}
 }
