@@ -10,10 +10,6 @@ public class Game implements Serializable {
 	
 	enum Disk {
 		LIGHT, DARK;
-		
-		public boolean isEmpty() {
-			return (this == null);
-		}
 	}
 	enum Rows {
 		HORIZONTAL(new int[][] { 
@@ -102,6 +98,86 @@ public class Game implements Serializable {
 		disks[35] = Disk.DARK;
 	}
 	
+	private void flipDisks(int loc) {
+		// get all rows
+		for (Rows rows : Rows.values()) {
+			// for each row
+			for (int i=0; i<rows.rows.length; i++) {
+				// for each space
+				for (int j=0; j<rows.rows[i].length; j++) {
+					if (rows.rows[i][j] == loc) {
+						switch (rows) {
+						case HORIZONTAL:
+							int left = checkLeft(loc);
+							int right = checkRight(loc);
+							
+							if (left != loc) {
+								// flip disks from left to loc
+								for (int iter=left; iter<loc; iter++) {
+									disks[iter] = currentPlayer;
+								}
+							} 
+							if (right != loc) {
+								// flip disks from loc to right
+								for (int iter=loc; iter<=right; iter++) {
+									disks[iter] = currentPlayer;
+								}
+							}
+						case VERTICAL:
+							int up = checkUp(loc);
+							int down = checkDown(loc);
+							
+							if (up != loc) {
+								// flip disks from up to loc
+								for (int iter=up; iter<loc; iter+=8) {
+									disks[iter] = currentPlayer;
+								}
+							}
+							if (down != loc) {
+								// flip disks from loc to down
+								for (int iter=loc; iter<=down; iter+=8) {
+									disks[iter] = currentPlayer;
+								}
+							}
+						case DIAGONAL:
+							int upLeft = checkUpLeft(loc);
+							int upRight = checkUpRight(loc);
+							int downLeft = checkDownLeft(loc);
+							int downRight = checkDownRight(loc);
+							
+							if (upLeft != loc) {
+								// flip disks from upLeft to loc
+								for (int iter=upLeft; iter<loc; iter+=9) {
+									disks[iter] = currentPlayer;
+								}
+							}
+							if (upRight != loc) {
+								// flip disks from upRight to loc
+								for (int iter=upRight; iter<loc; iter+=7) {
+									disks[iter] = currentPlayer;
+								}
+							}
+							if (downLeft != loc) {
+								// flip disks from loc to downLeft
+								for (int iter=loc; iter<=downLeft; iter+=7) {
+									disks[iter] = currentPlayer;
+								}
+							}
+							if (downRight != loc) {
+								// flip disks from loc to downRight
+								for (int iter=loc; iter<=downRight; iter+=9) {
+									disks[iter] = currentPlayer;
+								}
+							}
+						default:
+							// no valid rows
+						}
+					}
+				}
+			}
+		}
+	}
+	
 	/**
 	 * Returns Disk value of the current player
 	 * 
@@ -148,78 +224,166 @@ public class Game implements Serializable {
 	 * @param loc location of the disk
 	 */
 	public void placeDisk(int loc) {
+		// TODO add loc validation
 		if (isValidMove(loc)) {
 			disks[loc] = currentPlayer;
-			if (!isOver()) {
-				nextPlayer();				
-			}
-		}
-	}
-	
-	private boolean isOnBoard(int space) {
-		return space >= 0 && space < NUM_DISKS;
-	}
-
-// TODO findMoves()
-	public int[] findMoves() {
-		// search horizontal rows
-		for (var row : Rows.HORIZONTAL.rows) {
-			for (var space : row) {
-				if (disks[space] == currentPlayer) {
-					
-				}
-			}
-		}
-		return new int[10];
-	}
-	
-	public void checkSpace(int loc) {
-		for (var row : Rows.HORIZONTAL.rows) {
-			for (var space : row) {
-				if (space == loc) {
-					searchRow(row);
-				}
-			}
+			flipDisks(loc);
+			nextPlayer();							
 		}
 	}
 
-	private void searchRow(int[] row) {
-		// TODO Auto-generated method stub
-	}
-
-	// TODO evaluate if game is over
-	private boolean isOver() {
-		return false;
-	}
-
-// TODO validate move
-	private boolean isValidMove(int loc) {
-		return !isOver() && isOnBoard(loc) && disks[loc].isEmpty();
-	}
-
-// TODO getWinner()
-	
-	public Disk checkRows(int loc) {
+	private int checkLeft(int loc) {
 		for (Rows rows : Rows.values()) {
 			for (int i=0; i<rows.rows.length; i++) {
 				for (int j=0; j<rows.rows[i].length; j++) {
-					if (rows.rows[i][j] == loc) {
-						var left = disks[rows.rows[i][j-1]];
-						var right = disks[rows.rows[i][j+1]];
-						var up = disks[rows.rows[i-1][j]];
-						var down = disks[rows.rows[i+1][j]];
-						var upLeft = disks[rows.rows[i-1][j-1]];
-						var upRight = disks[rows.rows[i-1][j+1]];
-						var downLeft = disks[rows.rows[i+1][j-1]];
-						var downRight = disks[rows.rows[i+1][j+1]];
-						System.out.println("left: " + left + "\nright: " + right + "\nup: " + up + "\ndown: " + down);
-						System.out.println("up left: " + upLeft + "\nup right: " + upRight + "\ndown left: " + downLeft + "\ndown right: " + downRight);
-						System.out.println();
-						return right;						
+					if (rows.rows[i][j] == loc && isOnBoard(rows.rows[i][j-1])) {
+						if (disks[rows.rows[i][j-1]] != null) {
+							return checkLeft(rows.rows[i][j-1]);					
+						} else {
+							return rows.rows[i][j-1];
+						}					
 					}
 				}
 			}
 		}
-		return null;
+		return loc;
+	}
+	
+	private int checkRight(int loc) {
+		for (Rows rows : Rows.values()) {
+			for (int i=0; i<rows.rows.length; i++) {
+				for (int j=0; j<rows.rows[i].length; j++) {
+					if (rows.rows[i][j] == loc && isOnBoard(rows.rows[i-1][j])) {
+						if (disks[rows.rows[i][j+1]] != null) {
+							return checkRight(rows.rows[i][j+1]);
+						} else {
+							return rows.rows[i][j+1];
+						}
+					}
+				}
+			}
+		}
+		return loc;
+	}
+		
+	private int checkUp(int loc) {
+		for (Rows rows : Rows.values()) {
+			for (int i=1; i<rows.rows.length; i++) {
+				for (int j=0; j<rows.rows[i].length; j++) {
+					if (rows.rows[i][j] == loc && isOnBoard(rows.rows[i-1][j])) {
+						if (disks[rows.rows[i-1][j]] != null) {
+							return checkUp(rows.rows[i-1][j]);
+						} else {
+							return rows.rows[i-1][j];
+						}
+					}
+				}
+			}
+		}
+		return loc;
+	}
+	
+	private int checkDown(int loc) {
+		// rows.rows[i+1][j]
+		for (Rows rows : Rows.values()) {
+			for (int i=0; i<rows.rows.length; i++) {
+				for (int j=0; j<rows.rows[i].length; j++) {
+					if (rows.rows[i][j] == loc && isOnBoard(rows.rows[i+1][j])) {
+						if (disks[rows.rows[i+1][j]] != null) {
+							return checkDown(rows.rows[i+1][j]);
+						} else {
+							return rows.rows[i+1][j];
+						}
+					}
+				}
+			}
+		}
+		return loc;
+	}
+	private int checkUpLeft(int loc) {
+		// rows.rows[i-1][j-1]
+		for (Rows rows : Rows.values()) {
+			for (int i=1; i<rows.rows.length; i++) {
+				for (int j=1; j<rows.rows[i].length; j++) {
+					if (rows.rows[i][j] == loc && isOnBoard(rows.rows[i-1][j-1])) {
+						if (disks[rows.rows[i-1][j-1]] != null) {
+							return checkUpLeft(rows.rows[i-1][j-1]);
+						} else {
+							return rows.rows[i-1][j-1];
+						}
+					}
+				}
+			}
+		}
+		return loc;
+	}
+	private int checkUpRight(int loc) {
+		// rows.rows[i-1][j+1]
+		for (Rows rows : Rows.values()) {
+			for (int i=1; i<rows.rows.length; i++) {
+				for (int j=0; j<rows.rows[i].length; j++) {
+					if (rows.rows[i][j] == loc && isOnBoard(rows.rows[i-1][j+1])) {
+						if (disks[rows.rows[i-1][j+1]] != null) {
+							return checkUpRight(rows.rows[i-1][j+1]);
+						} else {
+							return rows.rows[i-1][j+1];
+						}
+					}
+				}
+			}
+		}
+		return loc;
+	}
+	private int checkDownLeft(int loc) {
+		// rows.rows[i+1][j-1]
+		for (Rows rows : Rows.values()) {
+			for (int i=0; i<rows.rows.length; i++) {
+				for (int j=1; j<rows.rows[i].length; j++) {
+					if (rows.rows[i][j] == loc && isOnBoard(rows.rows[i+1][j-1])) {
+						if (disks[rows.rows[i+1][j-1]] != null) {
+							return checkDownLeft(rows.rows[i+1][j-1]);
+						} else {
+							return rows.rows[i+1][j-1];
+						}
+					}
+				}
+			}
+		}
+		return loc;
+	}
+	private int checkDownRight(int loc) {
+		// rows.rows[i+1][j+1]
+		for (Rows rows : Rows.values()) {
+			for (int i=0; i<rows.rows.length; i++) {
+				for (int j=0; j<rows.rows[i].length; j++) {
+					if (rows.rows[i][j] == loc && isOnBoard(rows.rows[i+1][j+1])) {
+						if (disks[rows.rows[i+1][j+1]] != null) {
+							return checkDownRight(rows.rows[i+1][j+1]);
+						} else {
+							return rows.rows[i+1][j+1];
+						}
+					}
+				}
+			}
+		}
+		return loc;
+	}
+	private boolean isEmpty(Disk disk) {
+		return (disk == null);
+	}
+	private boolean isOnBoard(int space) {
+		return space >= 0 && space < NUM_DISKS;
+	}
+	// TODO evaluate if game is over
+	private boolean isOver() {
+		for (Disk disk : disks) {
+			if (disk == null) {
+				return false;
+			}
+		}
+		return true;
+	}
+	private boolean isValidMove(int loc) {
+		return !isOver() && isOnBoard(loc) && isEmpty(disks[loc]);
 	}
 }
