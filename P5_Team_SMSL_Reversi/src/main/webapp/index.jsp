@@ -12,15 +12,17 @@
 	width: 500px;
 }
 
-.light {
+.LIGHT {
 	background-color:white;
+	color: white;
 }
 
-.dark {
+.DARK {
 	background-color:black;
+	color: black;
 }
 
-.space {
+.disks {
 	text-align: center;
 	width: 50px;
 	height: 50px;
@@ -40,8 +42,11 @@
   			<td> 
   			<c:choose>
   			<c:when test="${empty space }">
-  				<button type="submit" name="loc">${stat.index }</button>
+  				<button class="submit" name="loc" class="space" value="${stat.index }">${stat.index }</button>
   			</c:when>
+  			<c:otherwise>
+  				<span class="space ${space }">${space }</span>
+  			</c:otherwise>
   			</c:choose>
   			
   			<td>
