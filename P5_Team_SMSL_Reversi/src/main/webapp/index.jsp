@@ -6,20 +6,33 @@
 <html>
 <head>
 <style>
-body {
-	width: 60%;
+.game {
+	background-color:black;
+	border: 5px black solid;
+	width: 500px;
 }
 
-.alt {
-	background-color: black;
+.light {
+	background-color:white;
 }
+
+.dark {
+	background-color:black;
+}
+
+.space {
+	text-align: center;
+	width: 50px;
+	height: 50px;
+}
+
 </style>
 
 <title> Reversi Game</title>
-<h1 style=""> 
-Reversi </h1>
+<h1> Reversi </h1>
 </head>
   <body>
+  <div class="game">
   <form action="<c:url value='moveDisk'/>"></form>
   	<table style="background-color:Green; border:Black; height: 500px; width: 500px">
   		<tr>
@@ -37,12 +50,13 @@ Reversi </h1>
   			<tr>
   			</c:if>
   		</c:forEach>
-  		<td style="background-color:Black; color: white;">
-  		<ul>
-  		<li>${game.currentPlayer }</li>
+  		<td colspan="16">
+  		<ul style="background-color:darkgreen; color:white;">
+  		<li>Current Player: ${game.currentPlayer }</li>
   		</ul>
   		</td>
     	</tr>
     </table>
+    </div>
   </body>
 </html>
