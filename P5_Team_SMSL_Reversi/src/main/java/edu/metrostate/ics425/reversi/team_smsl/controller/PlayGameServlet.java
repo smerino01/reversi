@@ -1,11 +1,14 @@
 package edu.metrostate.ics425.reversi.team_smsl.controller;
 
 import java.io.IOException;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import edu.metrostate.ics425.reversi.team_smsl.model.Game;
 
 /**
  * Servlet implementation class PlayGameServlet
@@ -36,9 +39,22 @@ public class PlayGameServlet extends HttpServlet {
 		processRequest(request, response);
 	}
 	
-	private void processRequest(HttpServletRequest request, HttpServletResponse response) {
-		// get
+	private void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// get data
+		int loc = Integer.parseInt(request.getParameter("loc"));
+		Game game = ( Game ) request.getSession().getAttribute("game");
+			
+		// verify
+		if (loc >= 0 && loc < 64) {		// loc is on board
+			// action
+			game.placeDisk(loc);
+		}
 		
+		// store
+		request.getSession().setAttribute("game", game);
+		
+		// forward
+		request.getRequestDispatcher("/index.jsp").forward(request, response);
 	}
 
 }
