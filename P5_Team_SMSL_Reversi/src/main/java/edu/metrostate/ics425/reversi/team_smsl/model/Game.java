@@ -113,19 +113,18 @@ public class Game implements Serializable {
 		disks[28] = Disk.DARK;
 		disks[35] = Disk.DARK;
 	}
-	private void flipDisks(int loc) {
-		int disk = checkDisks(loc);
+	private void flipDisks(int start, int end) {
+		
 	}
-	private int checkDisks(int loc) {
+	private boolean checkDisks(int loc) {
+		boolean isFound = false;
 		for (Rows rows : Rows.values()) {
 			for (int i=0; i<rows.rows.length; i++) {
 				for (int j=0; j<rows.rows[i].length; j++) {
 					if (rows.rows[i][j] == loc) {
 						for (Directions direction : Directions.values()) {
 							if (disks[rows.rows[i + direction.directions[0]][j + direction.directions[1]]] == null) {
-								// TODO add to chosen direction array
-								// 		search recursively
-								return rows.rows[i + direction.directions[0]][j + direction.directions[1]];
+								flipDisks(loc, rows.rows[i + direction.directions[0]][j + direction.directions[1]]);
 							}
 						}
 					}
@@ -133,7 +132,7 @@ public class Game implements Serializable {
 
 			}
 		}
-		return loc;
+		return isFound;
 	}
 	
 	/**
@@ -182,11 +181,10 @@ public class Game implements Serializable {
 	 * @param loc location of the disk
 	 */
 	public void placeDisk(int loc) {
-		// TODO add loc validation
-		if (isValidMove(loc)) {
-			disks[loc] = currentPlayer;
-			flipDisks(loc);
-			nextPlayer();							
+		if (isValidMove(loc) && checkDisks(loc)) {
+			nextPlayer();
+		} else {
+			// TODO invalid move
 		}
 	}
 
