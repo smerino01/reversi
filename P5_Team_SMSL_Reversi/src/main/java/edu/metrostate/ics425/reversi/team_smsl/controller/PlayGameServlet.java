@@ -22,7 +22,6 @@ public class PlayGameServlet extends HttpServlet {
      */
     public PlayGameServlet() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**
@@ -45,11 +44,10 @@ public class PlayGameServlet extends HttpServlet {
 		Game game = ( Game ) request.getSession().getAttribute("game");
 			
 		// verify
-		if (loc >= 0 && loc < 64) {		// loc is on board
-			// action
-			game.placeDisk(loc);
+		boolean takeTurn = game.placeDisk(loc);
+		if (!takeTurn) {
+			// TODO invalid move
 		}
-		
 		// store
 		request.getSession().setAttribute("game", game);
 		

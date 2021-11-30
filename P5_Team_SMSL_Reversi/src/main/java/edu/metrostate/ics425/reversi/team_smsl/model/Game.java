@@ -180,12 +180,12 @@ public class Game implements Serializable {
 	 * 
 	 * @param loc location of the disk
 	 */
-	public void placeDisk(int loc) {
+	public boolean placeDisk(int loc) {
 		if (isValidMove(loc) && checkDisks(loc)) {
 			nextPlayer();
-		} else {
-			// TODO invalid move
+			return true;
 		}
+		return false;
 	}
 
 	private boolean isEmpty(Disk disk) {
