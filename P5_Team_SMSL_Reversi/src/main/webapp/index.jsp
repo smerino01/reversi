@@ -35,14 +35,14 @@
 </head>
   <body>
   <div class="game">
-  <form action="<c:url value='moveDisk'/>"></form>
+  <form action="<c:url value='moveDisk'/>">
   	<table style="background-color:Green; border:Black; height: 500px; width: 500px">
   		<tr>
   		<c:forEach items="${game.disks}" var="space" varStatus="stat">
   			<td> 
   			<c:choose>
   			<c:when test="${empty space }">
-  				<button name="loc" class="space" value="${stat.index }">${stat.index }</button>
+  				<button type="submit" name="loc" class="space" value="${stat.index }">${stat.index }</button>
   			</c:when>
   			<c:otherwise>
   				<span class="space ${space }">${space }</span>
@@ -66,6 +66,7 @@
   		</td>
     	</tr>
     </table>
+    </form>
     </div>
   </body>
 </html>
