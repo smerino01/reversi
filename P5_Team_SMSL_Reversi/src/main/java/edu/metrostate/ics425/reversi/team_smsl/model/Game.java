@@ -168,10 +168,17 @@ public class Game implements Serializable {
 	 * @param player
 	 * @return score of the player
 	 */
-	public int getScore(Disk player) {
+	public int getDarkScore() {
 		int score = 0;
 		for (Disk disk : disks) {
-			if (disk == player) { score++; }
+			if (disk == Disk.DARK) { score++; }
+		}
+		return score;
+	}
+	public int getLightScore() {
+		int score = 0;
+		for (Disk disk : disks) {
+			if (disk == Disk.LIGHT) { score++; }
 		}
 		return score;
 	}

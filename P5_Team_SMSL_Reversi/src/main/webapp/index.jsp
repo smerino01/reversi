@@ -58,7 +58,7 @@
   		<td colspan="16">
   		<ul style="background-color:darkgreen; color:white;">
   		<li>Current Player: ${game.currentPlayer }</li>
-  		<li>Current Score: </li>
+  		<li>Current Score: Dark -> ${game.darkScore}  Light -> ${game.lightScore}</li>
   		<li>Game Over: </li>
   		<li>Winner: </li>
   		</ul>
