@@ -7,23 +7,6 @@ import java.io.Serializable;
  *
  */
 public class Game implements Serializable {
-	enum Directions {
-		UP_LEFT(new int[] {-1,-1,}), 
-		UP(new int[] {-1,0,}), 
-		UP_RIGHT(new int[] {-1,1}), 
-		LEFT(new int[] {0,-1}), 
-		RIGHT(new int[] {0,1}), 
-		DOWN_LEFT(new int[] {1,-1}), 
-		DOWN(new int[] {1,0}), 
-		DOWN_RIGHT(new int[] {1,1});
-
-		private int[] directions;
-		
-		Directions(int[] directions) {
-			this.directions = directions;
-		}
-	}
-	
 	enum Disk {
 		LIGHT, DARK;
 	}
@@ -113,26 +96,52 @@ public class Game implements Serializable {
 		disks[28] = Disk.DARK;
 		disks[35] = Disk.DARK;
 	}
-	private void flipDisks(int start, int end) {
-		
+
+	private boolean checkRow(int[] row) {
+		int start = -1;
+		int end = -1;
+		int step = -1;
+		for (int space : row) {
+			if (start == -1 && disks[space] != null) {
+				start = space;
+			}
+			if (start != -1 && disks[space] != null) {
+				step = space;
+			}
+		}
+		end = step;
+		if (disks[start] == currentPlayer && disks[end] == currentPlayer && start != end) {
+			System.out.println("row found: " + start + " " + end);
+			flipDisks(row);
+			return true;
+		}
+		return false;
 	}
-	private boolean checkDisks(int loc) {
-		boolean isFound = false;
+	
+	private boolean findRow(int loc) {
+		disks[loc] = currentPlayer;
+		boolean foundRow = false;
 		for (Rows rows : Rows.values()) {
-			for (int i=0; i<rows.rows.length; i++) {
-				for (int j=0; j<rows.rows[i].length; j++) {
-					if (rows.rows[i][j] == loc) {
-						for (Directions direction : Directions.values()) {
-							if (disks[rows.rows[i + direction.directions[0]][j + direction.directions[1]]] == null) {
-								flipDisks(loc, rows.rows[i + direction.directions[0]][j + direction.directions[1]]);
-							}
+			for (var row : rows.rows) {
+				for (var space : row) {
+					if (space == loc) {
+						boolean isRow = checkRow(row);
+						if (isRow) {
+							foundRow = true;
 						}
 					}
 				}
-
 			}
 		}
-		return isFound;
+		return foundRow;
+	}
+	
+	private void flipDisks(int[] row) {
+		for (int space : row) {
+			if (disks[space] != null) {
+				disks[space] = currentPlayer;
+			}
+		}
 	}
 	
 	/**
@@ -181,7 +190,7 @@ public class Game implements Serializable {
 	 * @param loc location of the disk
 	 */
 	public boolean placeDisk(int loc) {
-		if (isValidMove(loc) && checkDisks(loc)) {
+		if (isValidMove(loc) && findRow(loc)) {
 			nextPlayer();
 			return true;
 		}

@@ -37,12 +37,4 @@ class GameTest {
 		assertEquals(Disk.DARK, game.getDisks()[26]);
 		assertEquals(Disk.DARK, game.getDisks()[27]);
 	}
-	
-	@Test
-	void testFindMoves() {
-//		int[] possMoves = {19,26,37,44};
-//		int[] moves = game.findMoves();
-//		assertEquals(4, moves.length);
-//		assertTrue(moves.equals(possMoves));
-	}
 }
