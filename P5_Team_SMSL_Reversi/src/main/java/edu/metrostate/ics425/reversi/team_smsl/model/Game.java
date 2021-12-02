@@ -196,8 +196,22 @@ public class Game implements Serializable {
 		this.currentPlayer = (getCurrentPlayer() == Disk.DARK) ? Disk.LIGHT : Disk.DARK;
 	}
 	
-	public void passMove() {
-		nextPlayer();
+	public boolean passMove() {
+		if (!isOver()) {
+			for (Rows rows : Rows.values()) {
+				for (var row : rows.rows) {
+					for (var space : row) {
+						if (disks[space] == null) {
+							boolean isValid = findRow(space);
+							if (isValid) {
+								return false;
+							}
+						}
+					}
+				}
+			}
+		}
+		return true;
 	}
 	
 	/**
