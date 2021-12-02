@@ -40,16 +40,24 @@ public class PlayGameServlet extends HttpServlet {
 	
 	private void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// get data
-		int loc = Integer.parseInt(request.getParameter("loc"));
+		String quit = request.getParameter("quit");
+		String loc = request.getParameter("loc");
 		Game game = ( Game ) request.getSession().getAttribute("game");
 			
 		// verify
-		boolean takeTurn = game.placeDisk(loc);
-		if (!takeTurn) {
-			// TODO invalid move
+		if (quit != null) { 
+			request.getSession().setAttribute("game", new Game()); 
+		} else {
+			int locInt = Integer.parseInt(loc);
+			boolean takeTurn = game.placeDisk(locInt);
+			if (!takeTurn) {
+				// TODO invalid move
+			}
+			
+			// store
+			request.getSession().setAttribute("game", game);
+			
 		}
-		// store
-		request.getSession().setAttribute("game", game);
 		
 		// forward
 		request.getRequestDispatcher("/index.jsp").forward(request, response);
