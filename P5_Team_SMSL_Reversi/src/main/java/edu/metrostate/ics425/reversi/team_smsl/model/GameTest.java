@@ -26,9 +26,10 @@ class GameTest {
 	@Test 
 	void testPlaceDisk() {
 		assertEquals(Disk.DARK, game.getCurrentPlayer());
+		game.placeDisk(46);
+		assertEquals(null, game.getDisks()[46]);
 		game.placeDisk(43);
-		Disk[] board = game.getDisks();
-		assertEquals(Disk.DARK, board[43]);
+		assertEquals(Disk.DARK, game.getDisks()[43]);
 	}
 	
 	@Test

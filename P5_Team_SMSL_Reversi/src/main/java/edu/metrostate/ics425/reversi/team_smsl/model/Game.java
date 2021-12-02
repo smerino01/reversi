@@ -101,12 +101,16 @@ public class Game implements Serializable {
 		int start = -1;
 		int end = -1;
 		int step = -1;
-		for (int space : row) {
+		end: for (int space : row) {
 			if (start == -1 && disks[space] != null) {
 				start = space;
 			}
-			if (start != -1 && disks[space] != null) {
-				step = space;
+			if (start != -1) {
+				if (disks[space] != null) {
+					step = space;					
+				} else {
+					break end;
+				}
 			}
 		}
 		end = step;
