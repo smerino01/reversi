@@ -192,11 +192,12 @@ public class Game implements Serializable {
 		return score;
 	}
 	
-	/**
-	 * Sets current player to next player
-	 */
-	public void nextPlayer() {
+	private void nextPlayer() {
 		this.currentPlayer = (getCurrentPlayer() == Disk.DARK) ? Disk.LIGHT : Disk.DARK;
+	}
+	
+	public void passMove() {
+		nextPlayer();
 	}
 	
 	/**
