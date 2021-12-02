@@ -28,6 +28,8 @@ class GameTest {
 		assertEquals(Disk.DARK, game.getCurrentPlayer());
 		game.placeDisk(46);
 		assertEquals(null, game.getDisks()[46]);
+		game.placeDisk(43);
+		assertEquals(null, game.getDisks()[43]);
 		game.placeDisk(44);
 		assertEquals(Disk.DARK, game.getDisks()[44]);
 	}
