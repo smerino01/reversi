@@ -206,6 +206,7 @@ public class Game implements Serializable {
 			nextPlayer();
 			return true;
 		}
+		disks[loc] = null;
 		return false;
 	}
 
