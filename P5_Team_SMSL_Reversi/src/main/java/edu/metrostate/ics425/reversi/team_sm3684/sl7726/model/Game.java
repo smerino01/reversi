@@ -2,6 +2,7 @@ package edu.metrostate.ics425.reversi.team_sm3684.sl7726.model;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.logging.Logger;
 
 /**
  * @author skylar
@@ -79,7 +80,8 @@ public class Game implements Serializable {
 	 * Version of the bean
 	 */
 	private static final long serialVersionUID = 202111001L;
-	
+	private static final Logger LOGGER = Logger.getLogger("model.Game");
+
 	private static final int NUM_DISKS = 64;
 	private Disk[] disks;
 	private Disk currentPlayer;
@@ -98,7 +100,7 @@ public class Game implements Serializable {
 		disks[35] = Disk.DARK;
 	}
 
-	private boolean checkRow(int[] row, int loc) {
+	private int[] checkRow(int[] row, int loc) {
 		
 		int start = -1;
 		int startLoc = -1;
@@ -122,32 +124,29 @@ public class Game implements Serializable {
 		end = step;
 		if (start != -1 && end != -1) {				
 			if (disks[row[start]] != currentPlayer  && disks[row[end]] == currentPlayer && row[startLoc] == loc) {
-				flipDisks(Arrays.copyOfRange(row, startLoc, end));
-				return true;
+				return Arrays.copyOfRange(row, startLoc, end);
 			}
 			if (disks[row[end]] != currentPlayer && disks[row[start]] == currentPlayer && row[endLoc] == loc) {
-				flipDisks(Arrays.copyOfRange(row, start, endLoc));
-				return true;
+				return Arrays.copyOfRange(row, start, endLoc);
 			}
 		}
-		return false;
+		return null;
 	}
 	
-	private boolean findRow(int loc) {
-		boolean foundRow = false;
+	private int[] findRow(int loc) {
 		for (Rows rows : Rows.values()) {
 			for (var row : rows.rows) {
 				for (var space : row) {
 					if (space == loc) {
-						boolean isRow = checkRow(row, loc);
-						if (isRow) {
-							foundRow = true;
+						int[] isRow = checkRow(row, loc);
+						if (isRow != null) {
+							return isRow;
 						}
 					}
 				}
 			}
 		}
-		return foundRow;
+		return null;
 	}
 	
 	private void flipDisks(int[] row) {
@@ -207,8 +206,8 @@ public class Game implements Serializable {
 			for (var row : rows.rows) {
 				for (var space : row) {
 					if (disks[space] == null) {
-						boolean isValid = findRow(space);
-						if (isValid) {
+						int[] foundRow = findRow(space);
+						if (foundRow != null) {
 							return false;
 						}
 					}
@@ -225,7 +224,9 @@ public class Game implements Serializable {
 	 * @param loc location of the disk
 	 */
 	public boolean placeDisk(int loc) {
-		if (isValidMove(loc) && findRow(loc)) {
+		if (isValidMove(loc) && findRow(loc) != null) {
+			flipDisks(findRow(loc));
+			LOGGER.info(currentPlayer + " selected " + loc + ".");
 			disks[loc] = currentPlayer;
 			nextPlayer();
 			return true;
