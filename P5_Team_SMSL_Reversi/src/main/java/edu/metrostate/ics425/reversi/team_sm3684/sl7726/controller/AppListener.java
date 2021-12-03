@@ -1,10 +1,10 @@
-package edu.metrostate.ics425.reversi.team_smsl.controller;
+package edu.metrostate.ics425.reversi.team_sm3684.sl7726.controller;
 
 import javax.servlet.annotation.WebListener;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 
-import edu.metrostate.ics425.reversi.team_smsl.model.Game;
+import edu.metrostate.ics425.reversi.team_sm3684.sl7726.model.Game;
 
 /**
  * Application Lifecycle Listener implementation class AppListener

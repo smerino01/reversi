@@ -1,4 +1,4 @@
-package edu.metrostate.ics425.reversi.team_smsl.model;
+package edu.metrostate.ics425.reversi.team_sm3684.sl7726.model;
 
 import java.io.Serializable;
 import java.util.Arrays;
@@ -203,15 +203,13 @@ public class Game implements Serializable {
 	}
 	
 	public boolean passMove() {
-		if (!isOver()) {
-			for (Rows rows : Rows.values()) {
-				for (var row : rows.rows) {
-					for (var space : row) {
-						if (disks[space] == null) {
-							boolean isValid = findRow(space);
-							if (isValid) {
-								return false;
-							}
+		for (Rows rows : Rows.values()) {
+			for (var row : rows.rows) {
+				for (var space : row) {
+					if (disks[space] == null) {
+						boolean isValid = findRow(space);
+						if (isValid) {
+							return false;
 						}
 					}
 				}
@@ -244,12 +242,13 @@ public class Game implements Serializable {
 	}
 	// TODO evaluate if game is over
 	private boolean isOver() {
-		for (Disk disk : disks) {
-			if (disk == null) {
-				return false;
+		if (passMove()) {
+			nextPlayer();
+			if (passMove()) {
+				return true;
 			}
 		}
-		return true;
+		return false;
 	}
 	private boolean isValidMove(int loc) {
 		return !isOver() && isOnBoard(loc) && isEmpty(disks[loc]);

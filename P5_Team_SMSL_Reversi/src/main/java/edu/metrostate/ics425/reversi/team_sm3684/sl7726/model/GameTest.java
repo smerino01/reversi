@@ -1,10 +1,10 @@
-package edu.metrostate.ics425.reversi.team_smsl.model;
+package edu.metrostate.ics425.reversi.team_sm3684.sl7726.model;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-import edu.metrostate.ics425.reversi.team_smsl.model.Game.Disk;
+import edu.metrostate.ics425.reversi.team_sm3684.sl7726.model.Game.Disk;
 
 class GameTest {
 	Game game = new Game();
