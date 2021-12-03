@@ -1,6 +1,7 @@
 package edu.metrostate.ics425.reversi.team_smsl.model;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 /**
  * @author skylar
@@ -97,39 +98,50 @@ public class Game implements Serializable {
 		disks[35] = Disk.DARK;
 	}
 
-	private boolean checkRow(int[] row) {
+	private boolean checkRow(int[] row, int loc) {
+		
 		int start = -1;
+		int startLoc = -1;
 		int end = -1;
+		int endLoc = -1;
 		int step = -1;
-		end: for (int space : row) {
-			if (start == -1 && disks[space] != null) {
-				start = space;
-			}
-			if (start != -1) {
-				if (disks[space] != null) {
-					step = space;					
-				} else {
-					break end;
+		for (int i=0; i<row.length; i++) {
+			if (start == -1 && disks[row[i]] != null) {
+				if (i>0) {
+					startLoc = i-1;
 				}
+				start = i;
+			}
+			if (start != -1 && disks[row[i]] != null) {
+				if (i<row.length-1) {
+					endLoc = i+1;
+				}
+				step = i;
 			}
 		}
 		end = step;
-		if (disks[start] == currentPlayer && disks[end] == currentPlayer && start != end) {
-			System.out.println("row found: " + start + " " + end);
-			flipDisks(row);
-			return true;
+		if (start != -1 && end != -1) {				
+			if (disks[row[start]] != currentPlayer  && disks[row[end]] == currentPlayer && row[startLoc] == loc) {
+				flipDisks(Arrays.copyOfRange(row, startLoc, end));
+				disks[loc] = currentPlayer;
+				return true;
+			}
+			if (disks[row[end]] != currentPlayer && disks[row[start]] == currentPlayer && row[endLoc] == loc) {
+				flipDisks(Arrays.copyOfRange(row, start, endLoc));
+				disks[loc] = currentPlayer;
+				return true;
+			}
 		}
 		return false;
 	}
 	
 	private boolean findRow(int loc) {
-		disks[loc] = currentPlayer;
 		boolean foundRow = false;
 		for (Rows rows : Rows.values()) {
 			for (var row : rows.rows) {
 				for (var space : row) {
 					if (space == loc) {
-						boolean isRow = checkRow(row);
+						boolean isRow = checkRow(row, loc);
 						if (isRow) {
 							foundRow = true;
 						}
@@ -141,11 +153,7 @@ public class Game implements Serializable {
 	}
 	
 	private void flipDisks(int[] row) {
-		for (int space : row) {
-			if (disks[space] != null) {
-				disks[space] = currentPlayer;
-			}
-		}
+		Arrays.stream(row).forEach(x -> disks[x] = currentPlayer);
 	}
 	
 	/**
