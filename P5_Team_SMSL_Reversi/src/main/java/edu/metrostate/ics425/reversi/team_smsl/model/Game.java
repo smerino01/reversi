@@ -123,12 +123,10 @@ public class Game implements Serializable {
 		if (start != -1 && end != -1) {				
 			if (disks[row[start]] != currentPlayer  && disks[row[end]] == currentPlayer && row[startLoc] == loc) {
 				flipDisks(Arrays.copyOfRange(row, startLoc, end));
-				disks[loc] = currentPlayer;
 				return true;
 			}
 			if (disks[row[end]] != currentPlayer && disks[row[start]] == currentPlayer && row[endLoc] == loc) {
 				flipDisks(Arrays.copyOfRange(row, start, endLoc));
-				disks[loc] = currentPlayer;
 				return true;
 			}
 		}
@@ -230,6 +228,7 @@ public class Game implements Serializable {
 	 */
 	public boolean placeDisk(int loc) {
 		if (isValidMove(loc) && findRow(loc)) {
+			disks[loc] = currentPlayer;
 			nextPlayer();
 			return true;
 		}
