@@ -11,23 +11,19 @@
 	border: 5px black solid;
 	width: 500px;
 }
-
 .LIGHT {
 	background-color:white;
 	color: white;
 }
-
 .DARK {
 	background-color:black;
 	color: black;
 }
-
 .disks {
 	text-align: center;
 	width: 50px;
 	height: 50px;
 }
-
 </style>
 
 <title> Reversi Game</title>
